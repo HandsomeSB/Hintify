@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
+const { SidebarProvider } = require('./src/sidebarProvider');
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -23,27 +24,17 @@ function activate(context) {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from Hintify!');
 	});
-
 	context.subscriptions.push(disposable);
-	vscode.window.registerWebviewViewProvider('hintify_sidebar_view', new SidebarViewProvider());
-}
 
-class SidebarViewProvider {
-	resolveWebviewView(webviewView) {
-	  webviewView.webview.options = {
-		enableScripts: true
-	  };
-  
-	  webviewView.webview.html = `
-		<html>
-		  <body>
-			<h2>Hello from Sidebar</h2>
-			<p>This is your custom sidebar.</p>
-		  </body>
-		</html>
-	  `;
-	}
-  }
+	const sidebarProvider = new SidebarProvider();
+	context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider(
+		  'hintify_sidebar_view',
+		  sidebarProvider
+		)
+	  );
+	
+}
 
 // This method is called when your extension is deactivated
 function deactivate() {}
