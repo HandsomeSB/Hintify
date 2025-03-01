@@ -56,6 +56,8 @@ function activate(context) {
 		  sidebarProvider
 		)
 	  );
+	
+	  sidebarProvider.updateContent("<p>hello world</p>")
 
 
 	// Start the file watcher

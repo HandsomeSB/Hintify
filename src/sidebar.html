@@ -9,6 +9,7 @@
 <body>
   <h1>Sidebar Works!</h1>
   <button id="recordToggle" onclick="toggleRecord()">Click Me</button>
+  <div id="content"></div>
   <script>
     const vscode = acquireVsCodeApi();
     function toggleRecord() {
@@ -19,9 +20,15 @@
 
     window.addEventListener('message', (event) => {
       const message = event.data;
-      if (message.command === 'recordToggle') {
-        // Display the return value
-        document.getElementById('recordToggle').textContent = message.result;
+      switch (message.command) {
+        case 'recordToggle':
+          // Display the return value
+          document.getElementById('recordToggle').textContent = message.result;
+          break;
+        case 'updateContent':
+          // Display the return value
+          document.getElementById('content').textContent = message.data;
+          break;
       }
     });
 
