@@ -15,7 +15,18 @@
     "commands": [{
       "command": "hintify.helloWorld",
       "title": "Hintify: Hello World"
+    }, {
+      "command": "hintify.toggleTalk",
+      "title": "Hintify: toggleTalk"
     }],
+  "keybindings": [
+    {
+      "command": "hintify.toggleTalk",
+      "key": "ctrl+alt+t",
+      "mac": "cmd+alt+t",
+      "when": "editorTextFocus"
+    }
+  ],
   "viewsContainers": {
       "activitybar": [
         {
