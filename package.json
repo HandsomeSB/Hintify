@@ -30,6 +30,41 @@
         "when": "editorTextFocus"
       }
     ],
+    "configuration": {
+      "title": "Hintify",
+      "properties": {
+        "hintify.openai.model": {
+          "type": "string",
+          "default": "gpt-4-turbo",
+          "enum": [
+            "gpt-3.5-turbo",
+            "gpt-4",
+            "gpt-4-turbo"
+          ],
+          "description": "OpenAI model to use for code analysis (affects precision and cost)"
+        },
+        "hintify.automaticAnalysis.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic code analysis"
+        },
+        "hintify.automaticAnalysis.interval": {
+          "type": "integer",
+          "default": 30000,
+          "description": "Interval for automatic code analysis (in milliseconds)"
+        },
+        "hintify.analysis.verbosityLevel": {
+          "type": "string",
+          "default": "medium",
+          "enum": [
+            "minimal",
+            "medium",
+            "detailed"
+          ],
+          "description": "How detailed the code analysis feedback should be"
+        }
+      }
+    },  
     "viewsContainers": {
       "activitybar": [
         {
@@ -64,6 +99,7 @@
   },
   "dependencies": {
     "dotenv": "^16.4.7",
-    "openai": "^4.86.1"
+    "openai": "^4.86.1",
+    "vscode": "^1.1.37"
   }
 }
