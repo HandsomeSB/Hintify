@@ -2,10 +2,18 @@ const vscode = require("vscode");
 const cp = require("child_process");
 const path = require("path");
 const os = require("os");
+const fs = require("fs");
 
 let recordingProcess = null;
 
+/**
+ * Activates the extension and registers the commands.
+ * @param {vscode.ExtensionContext} context
+ */
 function activate(context) {
+  // Hardcoded path to sox for macOS/Linux
+  const soxPath = "/opt/homebrew/bin/sox";
+
   // Register the Start Recording command
   const startRecording = vscode.commands.registerCommand(
     "hintify.startRecording",
@@ -38,11 +46,18 @@ function activate(context) {
       let command;
 
       if (platform === "win32") {
-        // Windows: Use ffmpeg with DirectShow
+        // Windows: Use ffmpeg (assumes it's in PATH)
         command = `ffmpeg -f dshow -i audio="Microphone" -y "${outputFile}"`;
       } else if (platform === "darwin" || platform === "linux") {
-        // macOS and Linux: Use sox
-        command = `sox -d "${outputFile}"`;
+        // macOS and Linux: Use hardcoded sox path
+        command = `${soxPath} -d "${outputFile}"`;
+        // Check if sox exists at the hardcoded path
+        if (!fs.existsSync(soxPath)) {
+          vscode.window.showErrorMessage(
+            'sox not found at /opt/homebrew/bin/sox. Please install it using "brew install sox".'
+          );
+          return;
+        }
       } else {
         vscode.window.showErrorMessage("Unsupported platform for recording.");
         return;
@@ -61,7 +76,9 @@ function activate(context) {
       } catch (error) {
         if (error.code === "ENOENT") {
           vscode.window.showErrorMessage(
-            "Recording tool not found. Please install ffmpeg (Windows) or sox (macOS/Linux)."
+            `Recording tool not found. Ensure ${
+              platform === "win32" ? "ffmpeg" : "sox"
+            } is installed.`
           );
         } else {
           vscode.window.showErrorMessage(
@@ -81,10 +98,19 @@ function activate(context) {
         return;
       }
 
+      const workspaceFolders = vscode.workspace.workspaceFolders;
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+
+      const outputFile = path.join(
+        workspaceFolders[0].uri.fsPath,
+        `recording-${timestamp}.wav`
+      );
       // Stop the recording by sending SIGINT
       recordingProcess.kill("SIGINT");
       recordingProcess = null;
-      vscode.window.showInformationMessage("Recording stopped and saved.");
+      vscode.window.showInformationMessage(
+        `Recording stopped and saved as ${outputFile}.`
+      );
     }
   );
 
@@ -101,5 +127,3 @@ module.exports = {
   activate,
   deactivate,
 };
-
-// Recording failed: Command failed: sox -d "/Users/adarshsharma/CS/college/CSC-161/Homeworks/HW2-Rock-Paper-Scissors/recording-2025-03-01T08-58-09-363Z.wav" /bin/sh: sox: command not found
