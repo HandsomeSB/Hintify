@@ -15,13 +15,24 @@
     "commands": [{
       "command": "hintify.helloWorld",
       "title": "Hintify: Hello World"
+    }, {
+      "command": "hintify.toggleTalk",
+      "title": "Hintify: toggleTalk"
     }],
+  "keybindings": [
+    {
+      "command": "hintify.toggleTalk",
+      "key": "ctrl+alt+t",
+      "mac": "cmd+alt+t",
+      "when": "editorTextFocus"
+    }
+  ],
   "viewsContainers": {
       "activitybar": [
         {
           "id": "hintify_sidebar",
           "title": "Hintify",
-          "icon": "./assets/hintify_sidebar_icon.png"
+          "icon": "assets/duck.svg"
         }
       ]
     },
@@ -29,7 +40,8 @@
       "hintify_sidebar": [
         {
           "id": "hintify_sidebar_view",
-          "name": "Hintify"
+          "name": "Hintify",
+          "type": "webview"
         }
       ]
     }
