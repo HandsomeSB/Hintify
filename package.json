@@ -16,6 +16,18 @@
       {
         "command": "hintify.helloWorld",
         "title": "Hintify: Hello World"
+      },
+      {
+        "command": "hintify.toggleTalk",
+        "title": "Hintify: toggleTalk"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "hintify.toggleTalk",
+        "key": "ctrl+alt+t",
+        "mac": "cmd+alt+t",
+        "when": "editorTextFocus"
       }
     ],
     "configuration": {
@@ -52,6 +64,24 @@
           "description": "How detailed the code analysis feedback should be"
         }
       }
+    },  
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "hintify_sidebar",
+          "title": "Hintify",
+          "icon": "assets/duck.svg"
+        }
+      ]
+    },
+    "views": {
+      "hintify_sidebar": [
+        {
+          "id": "hintify_sidebar_view",
+          "name": "Hintify",
+          "type": "webview"
+        }
+      ]
     }
   },
   "scripts": {
