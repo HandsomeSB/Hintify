@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
+const contentRetriever = require('./src/contentRetrieval.js');
 
 let fileWatcherInterval = null;
 let currentFileContent = '';
@@ -32,39 +33,17 @@ function activate(context) {
 	vscode.window.registerWebviewViewProvider('hintify_sidebar_view', new SidebarViewProvider());
 
 	// Start the file watcher
-	startFileWatcher();
+	contentRetriever.startFileWatcher();
 	
 	// Register a disposable to clean up the interval when the extension is deactivated
 	context.subscriptions.push({
 		dispose: () => {
-			if (fileWatcherInterval) {
-				clearInterval(fileWatcherInterval);
-			}
+			contentRetriever.stopFileWatcher();
 		}
 	});
 }
 
-function startFileWatcher() {
-    if (fileWatcherInterval) {
-        clearInterval(fileWatcherInterval);
-    }
-
-    fileWatcherInterval = setInterval(async () => {
-        const activeEditor = vscode.window.activeTextEditor;
-        if (activeEditor) {
-            const document = activeEditor.document;
-            const newContent = document.getText();
-            
-            // Only update and show message if content changed and is not empty
-            if (newContent && newContent.trim().length > 0 && newContent !== currentFileContent) {
-                currentFileContent = newContent;
-                lastUpdateTime = new Date();
-                const message = `File content updated: ${activeEditor.document.fileName}`;
-                vscode.window.showInformationMessage(message);
-            }
-        }
-    }, 30000); // 30 seconds
-}
+// Remove the old startFileWatcher function as it's now in contentRetrieval.js
 
 class SidebarViewProvider {
 	resolveWebviewView(webviewView) {
