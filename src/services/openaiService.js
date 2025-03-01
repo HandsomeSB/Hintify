@@ -182,7 +182,10 @@ async function impersonate(character, context) {
         const config = vscode.workspace.getConfiguration('hintify');
         const modelName = config.get('openai.model', 'gpt-4-turbo');
 
-        let systemPrompt = `You are ${character}, trying to fix my code. You will be given a JSON object of all potential issues of the code. Phrase the issues the same way your character would.`;
+        let systemPrompt = `You are ${character}, trying to fix my code. 
+        You will be given a JSON object of all potential issues of the code. 
+        Pick two of them, and provide brief commentaries. 
+        Phrase the issues the same way your character would.`;
 
         const response = await openai.chat.completions.create({
             model: modelName,

@@ -64,9 +64,9 @@ function activate(context) {
 			const impersonateResponse = await openaiService.impersonate("Gordon Ramsay", response);
 			sidebarProvider.updateContent(impersonateResponse);
 
-			vscode.window.showInformationMessage('Impersonating...');
-			tts.sendRequest(impersonateResponse);
-			vscode.window.showInformationMessage('Playing audio...');
+			// vscode.window.showInformationMessage('Impersonating...');
+			// tts.sendRequest(impersonateResponse);
+			// vscode.window.showInformationMessage('Playing audio...');
 		} else {
 			vscode.window.showErrorMessage('OpenAI not configured');
 		}
