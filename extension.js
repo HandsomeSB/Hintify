@@ -4,6 +4,11 @@ const vscode = require('vscode');
 const { SidebarProvider } = require('./src/sidebarProvider');
 const { VoiceRegister } = require('./src/voiceRegister');
 const contentRetriever = require('./src/contentRetrieval.js');
+const TTS = require('./src/tts.js');
+const dotenv = require('dotenv');
+const path = require('path');
+
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 let fileWatcherInterval = null;
 let currentFileContent = '';
@@ -62,6 +67,9 @@ function activate(context) {
 			contentRetriever.stopFileWatcher();
 		}
 	});
+
+	const tts = new TTS(process.env.OPENAI_KEY);
+	tts.sendRequest('Hey Adarsh! You should take a break now!');
 	
 }
 
