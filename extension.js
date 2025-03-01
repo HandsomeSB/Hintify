@@ -44,7 +44,7 @@ function activate(context) {
 	);
 
 	// Register the sidebar
-	const sidebarProvider = new SidebarProvider();
+	const sidebarProvider = new SidebarProvider(context);
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(
 		  'hintify_sidebar_view',
