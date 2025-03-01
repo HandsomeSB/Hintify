@@ -7,11 +7,16 @@ const contentRetriever = require("./src/contentRetrieval.js");
 const TTS = require("./src/tts.js");
 const dotenv = require("dotenv");
 const path = require("path");
+const openaiService = require('./src/services/openaiService.js');
 
 const voiceRecording = require("./src/voiceRecording");
 const whisper = require("./src/wispher");
 
-dotenv.config({ path: path.join(__dirname, ".env") });
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+let fileWatcherInterval = null;
+let currentFileContent = '';
+let lastUpdateTime = null;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -45,8 +50,32 @@ function activate(context) {
     )
   );
 
-  // Start the file watcher
-  contentRetriever.startFileWatcher();
+
+	openaiService.initialize();
+	const tts = new TTS(process.env.OPENAI_KEY);
+	// Start the file watcher
+	contentRetriever.startFileWatcher();
+	contentRetriever.addFileUpdateCallback(async (content, fileName, fileExtension) => {
+		console.log('File content updated at:', fileName, fileExtension);
+		console.log(content);
+
+		if (openaiService.isConfigured()) {
+			vscode.window.showInformationMessage('Generating code hints...');
+			const response = await openaiService.getCodeHints(content, fileName, fileExtension);
+			console.log(response);
+			vscode.window.showInformationMessage('Code hints generated!');
+
+			vscode.window.showInformationMessage('Impersonating Gordon Ramsay...');
+			const impersonateResponse = await openaiService.impersonate("Gordon Ramsay", response);
+			console.log(impersonateResponse);
+
+			vscode.window.showInformationMessage('Impersonating...');
+			tts.sendRequest(impersonateResponse);
+			vscode.window.showInformationMessage('Playing audio...');
+		} else {
+			vscode.window.showErrorMessage('OpenAI not configured');
+		}
+	});
 
   // Register a disposable to clean up the interval when the extension is deactivated
   context.subscriptions.push({
@@ -55,8 +84,8 @@ function activate(context) {
     },
   });
 
-  const tts = new TTS(process.env.OPENAI_KEY);
-  tts.sendRequest("Hey Adarsh! You should take a break now!");
+  // const tts = new TTS(process.env.OPENAI_KEY);
+  // tts.sendRequest("Hey Adarsh! You should take a break now!");
 
   const startRecording = vscode.commands.registerCommand(
     "hintify.startRecording",

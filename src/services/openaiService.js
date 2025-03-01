@@ -1,11 +1,13 @@
-const { Configuration, OpenAIApi } = require('openai');
+const { OpenAI } = require('openai');
 const vscode = require('vscode');
 const path = require('path');
 const fs = require('fs');
+const dotenv = require('dotenv');
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 // Constants
-const API_KEY = process.env.OPENAI_API_KEY || 'your-api-key-here'; // Replace with your actual API key
-
+const API_KEY = process.env.OPENAI_KEY || 'your-api-key-here'; // Replace with your actual API key
 /**
  * OpenAI API instance
  * @type {OpenAIApi}
@@ -45,12 +47,9 @@ function initialize() {
             }
         }
         
-        // Configure OpenAI
-        const configuration = new Configuration({
+        openai = new OpenAI({
             apiKey: apiKey,
         });
-        
-        openai = new OpenAIApi(configuration);
     } catch (error) {
         console.error('Failed to initialize OpenAI:', error);
         openai = null;
@@ -106,7 +105,7 @@ async function getCodeHints(code, fileName, fileExtension) {
     Only include actual issues - if the code looks good, return an empty array.`;
     
     try {
-        const response = await openai.createChatCompletion({
+        const response = await openai.chat.completions.create({
             model: modelName,
             messages: [
                 {
@@ -123,13 +122,8 @@ async function getCodeHints(code, fileName, fileExtension) {
         });
         
         // Parse the response
-        const content = response.data.choices[0].message.content.trim();
-        try {
-            return JSON.parse(content);
-        } catch (e) {
-            console.error("Failed to parse JSON response:", content);
-            throw new Error("Failed to parse LLM response");
-        }
+        const content = response.choices[0].message.content.trim();
+        return content
     } catch (error) {
         console.error("OpenAI API error:", error);
         throw error;
@@ -158,7 +152,7 @@ async function askAboutCode(code, fileName, userQuery) {
     const modelName = config.get('openai.model', 'gpt-3.5-turbo');
     
     try {
-        const response = await openai.createChatCompletion({
+        const response = await openai.chat.completions.create({
             model: modelName,
             messages: [
                 {
@@ -183,9 +177,43 @@ async function askAboutCode(code, fileName, userQuery) {
     }
 }
 
+async function impersonate(character, context) {
+    try {
+        const config = vscode.workspace.getConfiguration('hintify');
+        const modelName = config.get('openai.model', 'gpt-4-turbo');
+
+        let systemPrompt = `You are ${character}, trying to fix my code. You will be given a JSON object of all potential issues of the code. Phrase the issues the same way your character would.`;
+
+        const response = await openai.chat.completions.create({
+            model: modelName,
+            messages: [
+                {
+                    role: "system",
+                    content: systemPrompt
+                },
+                {
+                    role: "user",
+                    content: `Here are the issues with the code: ${context}`
+                }
+            ],
+            temperature: 0.3,
+            max_tokens: 500
+        });
+        
+        // Parse the response
+        const content = response.choices[0].message.content.trim();
+
+        return content;
+    } catch (error) {
+        console.error("OpenAI API error:", error);
+        throw error;
+    }
+}   
+
 module.exports = {
     initialize,
     isConfigured,
     getCodeHints,
-    askAboutCode
+    askAboutCode,
+    impersonate
 };
