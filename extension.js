@@ -9,6 +9,9 @@ const dotenv = require("dotenv");
 const path = require("path");
 const openaiService = require('./src/services/openaiService.js');
 
+const voiceRecording = require("./src/voiceRecording");
+const whisper = require("./src/wispher");
+
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 let fileWatcherInterval = null;
