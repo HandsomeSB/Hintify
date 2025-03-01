@@ -14,7 +14,7 @@
   "contributes": {
     "commands": [{
       "command": "hintify.helloWorld",
-      "title": "Hello World"
+      "title": "Hintify: Hello World"
     }]
   },
   "scripts": {
