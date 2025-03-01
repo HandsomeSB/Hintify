@@ -1,92 +1,105 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-const vscode = require('vscode');
+const vscode = require("vscode");
+const cp = require("child_process");
+const path = require("path");
+const os = require("os");
 
-let fileWatcherInterval = null;
-let currentFileContent = '';
-let lastUpdateTime = null;
+let recordingProcess = null;
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+function activate(context) {
+  // Register the Start Recording command
+  const startRecording = vscode.commands.registerCommand(
+    "hintify.startRecording",
+    () => {
+      if (recordingProcess) {
+        vscode.window.showInformationMessage(
+          "Recording is already in progress."
+        );
+        return;
+      }
+
+      // Check for an open workspace
+      const workspaceFolders = vscode.workspace.workspaceFolders;
+      if (!workspaceFolders || workspaceFolders.length === 0) {
+        vscode.window.showErrorMessage(
+          "No workspace folder open to save the recording."
+        );
+        return;
+      }
+
+      // Generate a unique filename with timestamp
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const outputFile = path.join(
+        workspaceFolders[0].uri.fsPath,
+        `recording-${timestamp}.wav`
+      );
+
+      // Determine the platform and set the recording command
+      const platform = os.platform();
+      let command;
+
+      if (platform === "win32") {
+        // Windows: Use ffmpeg with DirectShow
+        command = `ffmpeg -f dshow -i audio="Microphone" -y "${outputFile}"`;
+      } else if (platform === "darwin" || platform === "linux") {
+        // macOS and Linux: Use sox
+        command = `sox -d "${outputFile}"`;
+      } else {
+        vscode.window.showErrorMessage("Unsupported platform for recording.");
+        return;
+      }
+
+      try {
+        // Start the recording process
+        recordingProcess = cp.exec(command, (error) => {
+          if (error && error.signal !== "SIGINT") {
+            vscode.window.showErrorMessage(
+              `Recording failed: ${error.message}`
+            );
+          }
+        });
+        vscode.window.showInformationMessage("Recording started...");
+      } catch (error) {
+        if (error.code === "ENOENT") {
+          vscode.window.showErrorMessage(
+            "Recording tool not found. Please install ffmpeg (Windows) or sox (macOS/Linux)."
+          );
+        } else {
+          vscode.window.showErrorMessage(
+            `Failed to start recording: ${error.message}`
+          );
+        }
+      }
+    }
+  );
+
+  // Register the Stop Recording command
+  const stopRecording = vscode.commands.registerCommand(
+    "hintify.stopRecording",
+    () => {
+      if (!recordingProcess) {
+        vscode.window.showErrorMessage("No active recording to stop.");
+        return;
+      }
+
+      // Stop the recording by sending SIGINT
+      recordingProcess.kill("SIGINT");
+      recordingProcess = null;
+      vscode.window.showInformationMessage("Recording stopped and saved.");
+    }
+  );
+
+  // Add commands to the extension context
+  context.subscriptions.push(startRecording, stopRecording);
+}
 
 /**
- * @param {vscode.ExtensionContext} context
+ * Deactivates the extension.
  */
-function activate(context) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "hintify" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('hintify.helloWorld', function () {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Hintify!');
-	});
-
-	context.subscriptions.push(disposable);
-	vscode.window.registerWebviewViewProvider('hintify_sidebar_view', new SidebarViewProvider());
-
-	// Start the file watcher
-	startFileWatcher();
-	
-	// Register a disposable to clean up the interval when the extension is deactivated
-	context.subscriptions.push({
-		dispose: () => {
-			if (fileWatcherInterval) {
-				clearInterval(fileWatcherInterval);
-			}
-		}
-	});
-}
-
-function startFileWatcher() {
-    if (fileWatcherInterval) {
-        clearInterval(fileWatcherInterval);
-    }
-
-    fileWatcherInterval = setInterval(async () => {
-        const activeEditor = vscode.window.activeTextEditor;
-        if (activeEditor) {
-            const document = activeEditor.document;
-            const newContent = document.getText();
-            
-            // Only update and show message if content changed and is not empty
-            if (newContent && newContent.trim().length > 0 && newContent !== currentFileContent) {
-                currentFileContent = newContent;
-                lastUpdateTime = new Date();
-                const message = `File content updated: ${activeEditor.document.fileName}`;
-                vscode.window.showInformationMessage(message);
-            }
-        }
-    }, 30000); // 30 seconds
-}
-
-class SidebarViewProvider {
-	resolveWebviewView(webviewView) {
-	  webviewView.webview.options = {
-		enableScripts: true
-	  };
-  
-	  webviewView.webview.html = `
-		<html>
-		  <body>
-			<h2>Hello from Sidebar</h2>
-			<p>This is your custom sidebar.</p>
-		  </body>
-		</html>
-	  `;
-	}
-  }
-
-// This method is called when your extension is deactivated
 function deactivate() {}
 
 module.exports = {
-	activate,
-	deactivate
-}
+  activate,
+  deactivate,
+};
+
+// Recording failed: Command failed: sox -d "/Users/adarshsharma/CS/college/CSC-161/Homeworks/HW2-Rock-Paper-Scissors/recording-2025-03-01T08-58-09-363Z.wav" /bin/sh: sox: command not found
