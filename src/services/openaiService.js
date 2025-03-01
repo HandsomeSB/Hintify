@@ -123,12 +123,7 @@ async function getCodeHints(code, fileName, fileExtension) {
         
         // Parse the response
         const content = response.choices[0].message.content.trim();
-        try {
-            return JSON.parse(content);
-        } catch (e) {
-            console.error("Failed to parse JSON response:", content);
-            throw new Error("Failed to parse LLM response");
-        }
+        return content
     } catch (error) {
         console.error("OpenAI API error:", error);
         throw error;
@@ -157,7 +152,7 @@ async function askAboutCode(code, fileName, userQuery) {
     const modelName = config.get('openai.model', 'gpt-3.5-turbo');
     
     try {
-        const response = await openai.createChatCompletion({
+        const response = await openai.chat.completions.create({
             model: modelName,
             messages: [
                 {
@@ -182,9 +177,43 @@ async function askAboutCode(code, fileName, userQuery) {
     }
 }
 
+async function impersonate(character, context) {
+    try {
+        const config = vscode.workspace.getConfiguration('hintify');
+        const modelName = config.get('openai.model', 'gpt-4-turbo');
+
+        let systemPrompt = `You are ${character}, trying to fix my code. You will be given a JSON object of all potential issues of the code. Phrase the issues the same way your character would.`;
+
+        const response = await openai.chat.completions.create({
+            model: modelName,
+            messages: [
+                {
+                    role: "system",
+                    content: systemPrompt
+                },
+                {
+                    role: "user",
+                    content: `Here are the issues with the code: ${context}`
+                }
+            ],
+            temperature: 0.3,
+            max_tokens: 500
+        });
+        
+        // Parse the response
+        const content = response.choices[0].message.content.trim();
+
+        return content;
+    } catch (error) {
+        console.error("OpenAI API error:", error);
+        throw error;
+    }
+}   
+
 module.exports = {
     initialize,
     isConfigured,
     getCodeHints,
-    askAboutCode
+    askAboutCode,
+    impersonate
 };

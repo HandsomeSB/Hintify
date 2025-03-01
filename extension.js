@@ -56,6 +56,7 @@ function activate(context) {
 
 
 	openaiService.initialize();
+	const tts = new TTS(process.env.OPENAI_KEY);
 	// Start the file watcher
 	contentRetriever.startFileWatcher();
 	contentRetriever.addFileUpdateCallback(async (content, fileName, fileExtension) => {
@@ -65,9 +66,16 @@ function activate(context) {
 		if (openaiService.isConfigured()) {
 			vscode.window.showInformationMessage('Generating code hints...');
 			const response = await openaiService.getCodeHints(content, fileName, fileExtension);
-
 			console.log(response);
 			vscode.window.showInformationMessage('Code hints generated!');
+
+			vscode.window.showInformationMessage('Impersonating Gordon Ramsay...');
+			const impersonateResponse = await openaiService.impersonate("Gordon Ramsay", response);
+			console.log(impersonateResponse);
+
+			vscode.window.showInformationMessage('Impersonating...');
+			tts.sendRequest(impersonateResponse);
+			vscode.window.showInformationMessage('Playing audio...');
 		} else {
 			vscode.window.showErrorMessage('OpenAI not configured');
 		}
