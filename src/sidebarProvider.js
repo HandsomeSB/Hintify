@@ -31,11 +31,11 @@ class SidebarProvider {
             break;
         }
     });
-
-    this.updateContent("<p>hello world</p>");
   }
 
   updateContent(data) {
+    //TODO, consider implementing a queue to handle multiple
+    //concurrent requests
     if(!this._webviewView) {
       console.error('Webview not initialized');
       return;

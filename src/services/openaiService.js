@@ -83,7 +83,7 @@ async function getCodeHints(code, fileName, fileExtension) {
     
     // Get model from configuration
     const config = vscode.workspace.getConfiguration('hintify');
-    const modelName = config.get('openai.model', 'gpt-4-turbo');
+    const modelName = config.get('openai.model', 'gpt-3.5-turbo');
     const verbosityLevel = config.get('analysis.verbosityLevel', 'medium');
     
     // Adjust system prompt based on verbosity level

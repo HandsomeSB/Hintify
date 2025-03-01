@@ -27,7 +27,7 @@
           break;
         case 'updateContent':
           // Display the return value
-          document.getElementById('content').textContent = message.data;
+          document.getElementById('content').innerHTML = message.data;
           break;
       }
     });
