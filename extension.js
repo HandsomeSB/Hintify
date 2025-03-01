@@ -3,6 +3,11 @@
 const vscode = require('vscode');
 const { SidebarProvider } = require('./src/sidebarProvider');
 const { VoiceRegister } = require('./src/voiceRegister');
+const contentRetriever = require('./src/contentRetrieval.js');
+
+let fileWatcherInterval = null;
+let currentFileContent = '';
+let lastUpdateTime = null;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -46,6 +51,17 @@ function activate(context) {
 		  sidebarProvider
 		)
 	  );
+
+
+	// Start the file watcher
+	contentRetriever.startFileWatcher();
+
+	// Register a disposable to clean up the interval when the extension is deactivated
+	context.subscriptions.push({
+		dispose: () => {
+			contentRetriever.stopFileWatcher();
+		}
+	});
 	
 }
 
