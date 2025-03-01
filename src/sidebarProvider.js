@@ -6,10 +6,12 @@ const { VoiceRegister } = require('./voiceRegister');
 class SidebarProvider {
   constructor(_context) {
     this._context = _context;
+    this._webviewView = null;
   }
 
   resolveWebviewView(webviewView, context, _token) {
     webviewView.webview.options = { enableScripts: true };
+    this._webviewView = webviewView;
 
     // Load the HTML file
     const htmlPath = path.join(this._context.extensionPath, 'src', 'sidebar.html');
@@ -28,6 +30,19 @@ class SidebarProvider {
             });
             break;
         }
+    });
+  }
+
+  updateContent(data) {
+    //TODO, consider implementing a queue to handle multiple
+    //concurrent requests
+    if(!this._webviewView) {
+      console.error('Webview not initialized');
+      return;
+    }
+    this._webviewView.webview.postMessage({
+      command: 'updateContent',
+      data: data
     });
   }
 }
