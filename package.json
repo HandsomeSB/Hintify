@@ -14,12 +14,16 @@
   "contributes": {
     "commands": [
       {
-        "command": "hintify.helloWorld",
-        "title": "Hintify: Hello World"
-      },
-      {
         "command": "hintify.toggleTalk",
         "title": "Hintify: toggleTalk"
+      },
+      {
+        "command": "hintify.startRecording",
+        "title": "Start Recording"
+      },
+      {
+        "command": "hintify.stopRecording",
+        "title": "Stop Recording"
       }
     ],
     "keybindings": [
@@ -64,7 +68,7 @@
           "description": "How detailed the code analysis feedback should be"
         }
       }
-    },  
+    },
     "viewsContainers": {
       "activitybar": [
         {
@@ -83,18 +87,6 @@
         }
       ]
     }
-    "commands": [
-      {
-        "command": "hintify.startRecording",
-        "title": "Start Recording"
-      },
-      {
-        "command": "hintify.stopRecording",
-        "title": "Stop Recording"
-      }
-    ],
-    "viewsContainers": {},
-    "views": {}
   },
   "scripts": {
     "lint": "eslint .",
@@ -105,20 +97,16 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@types/vscode": "^1.97.0",
-    "@types/vscode": "^1.97.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1",
     "eslint": "^9.19.0"
   },
   "dependencies": {
+    "@vscode/test-electron": "^2.4.1",
+    "axios": "^1.8.1",
     "dotenv": "^16.4.7",
+    "eslint": "^9.19.0",
     "openai": "^4.86.1",
     "vscode": "^1.1.37"
-    "@vscode/test-electron": "^2.4.1",
-    "eslint": "^9.19.0"
-  },
-  "dependencies": {
-    "axios": "^1.8.1",
-    "dotenv": "^16.4.7"
   }
 }
