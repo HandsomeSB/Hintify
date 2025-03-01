@@ -14,10 +14,6 @@ const whisper = require("./src/wispher");
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-let fileWatcherInterval = null;
-let currentFileContent = '';
-let lastUpdateTime = null;
-
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 /**
