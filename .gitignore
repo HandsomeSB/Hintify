@@ -2,3 +2,7 @@ node_modules
 .vscode-test/
 *.vsix
 .env
+.vscode
+.DS_Store
+.vscode-test.mjs
+.vscodeignore
