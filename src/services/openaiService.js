@@ -1,11 +1,13 @@
-const { Configuration, OpenAIApi } = require('openai');
+const { OpenAI } = require('openai');
 const vscode = require('vscode');
 const path = require('path');
 const fs = require('fs');
+const dotenv = require('dotenv');
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 // Constants
-const API_KEY = process.env.OPENAI_API_KEY || 'your-api-key-here'; // Replace with your actual API key
-
+const API_KEY = process.env.OPENAI_KEY || 'your-api-key-here'; // Replace with your actual API key
 /**
  * OpenAI API instance
  * @type {OpenAIApi}
@@ -45,12 +47,9 @@ function initialize() {
             }
         }
         
-        // Configure OpenAI
-        const configuration = new Configuration({
+        openai = new OpenAI({
             apiKey: apiKey,
         });
-        
-        openai = new OpenAIApi(configuration);
     } catch (error) {
         console.error('Failed to initialize OpenAI:', error);
         openai = null;
@@ -106,7 +105,7 @@ async function getCodeHints(code, fileName, fileExtension) {
     Only include actual issues - if the code looks good, return an empty array.`;
     
     try {
-        const response = await openai.createChatCompletion({
+        const response = await openai.chat.completions.create({
             model: modelName,
             messages: [
                 {
@@ -123,7 +122,7 @@ async function getCodeHints(code, fileName, fileExtension) {
         });
         
         // Parse the response
-        const content = response.data.choices[0].message.content.trim();
+        const content = response.choices[0].message.content.trim();
         try {
             return JSON.parse(content);
         } catch (e) {
