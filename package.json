@@ -15,7 +15,24 @@
     "commands": [{
       "command": "hintify.helloWorld",
       "title": "Hintify: Hello World"
-    }]
+    }],
+  "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "hintify_sidebar",
+          "title": "Hintify",
+          "icon": "./assets/hintify_sidebar_icon.png"
+        }
+      ]
+    },
+    "views": {
+      "hintify_sidebar": [
+        {
+          "id": "hintify_sidebar_view",
+          "name": "Hintify"
+        }
+      ]
+    }
   },
   "scripts": {
     "lint": "eslint .",

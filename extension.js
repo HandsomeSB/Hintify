@@ -25,7 +25,25 @@ function activate(context) {
 	});
 
 	context.subscriptions.push(disposable);
+	vscode.window.registerWebviewViewProvider('hintify_sidebar_view', new SidebarViewProvider());
 }
+
+class SidebarViewProvider {
+	resolveWebviewView(webviewView) {
+	  webviewView.webview.options = {
+		enableScripts: true
+	  };
+  
+	  webviewView.webview.html = `
+		<html>
+		  <body>
+			<h2>Hello from Sidebar</h2>
+			<p>This is your custom sidebar.</p>
+		  </body>
+		</html>
+	  `;
+	}
+  }
 
 // This method is called when your extension is deactivated
 function deactivate() {}
