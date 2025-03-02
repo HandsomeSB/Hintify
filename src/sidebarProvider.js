@@ -2,6 +2,7 @@ const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
 const { VoiceRegister } = require('./voiceRegister');
+const characterSelector = require('./ttsTest/characterSelector');
 
 class SidebarProvider {
   constructor(_context) {
@@ -29,8 +30,14 @@ class SidebarProvider {
                 result: voiceRegister.isRecording
             });
             break;
+          case 'characterSelected':
+            const selectedCharacter = characterSelector.selectCharacter(message.character);
+            console.log(`Selected character: ${message.character} with model key: ${selectedCharacter}`);
+            break;
         }
     });
+
+    this.populateCharacterDropdown();
   }
 
   updateContent(data) {
@@ -43,6 +50,18 @@ class SidebarProvider {
     this._webviewView.webview.postMessage({
       command: 'updateContent',
       data: data
+    });
+  }
+
+  populateCharacterDropdown() {
+    if(!this._webviewView) {
+      console.error('Webview not initialized');
+      return;
+    }
+    const characters = characterSelector.getAllCharacters();
+    this._webviewView.webview.postMessage({
+      command: 'populateCharacters',
+      characters: characters
     });
   }
 }

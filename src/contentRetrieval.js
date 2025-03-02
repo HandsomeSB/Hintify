@@ -12,7 +12,7 @@ function startFileWatcher() {
         clearInterval(fileWatcherInterval);
     }
 
-    fileWatcherInterval = setInterval(async () => {
+    async function onInterval() { 
         const activeEditor = vscode.window.activeTextEditor;
         if (activeEditor) {
             const document = activeEditor.document;
@@ -28,6 +28,12 @@ function startFileWatcher() {
                 onFileUpdate(); 
             }
         }
+    }
+
+    onInterval();
+
+    fileWatcherInterval = setInterval(async () => {
+        onInterval();
     }, 60000); // 60 seconds
 }
 
