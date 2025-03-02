@@ -35,6 +35,8 @@ function activate(context) {
           .transcribe(filePath)
           .then((transcript) => {
             if (transcript) {
+              // TODO: Send`transcript` variable to LLM for query
+
               vscode.window.showInformationMessage(
                 "Transcription: " + transcript
               );
