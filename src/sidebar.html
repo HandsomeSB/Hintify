@@ -83,6 +83,8 @@
       <p>Voice-enabled coding assistant</p>
     </div>
 
+    <div id="content"></div>
+
     <button
       id="recordToggle"
       class="record-button inactive"
@@ -122,8 +124,15 @@
 
       window.addEventListener("message", (event) => {
         const message = event.data;
-        if (message.command === "recordToggle") {
-          updateButtonState(message.isRecording);
+        switch (message.command) {
+          case "recordToggle":
+            // Display the return value
+            updateButtonState(message.isRecording);
+            break;
+          case "updateContent":
+            // Display the return value
+            document.getElementById("content").innerHTML = message.data;
+            break;
         }
       });
     </script>
