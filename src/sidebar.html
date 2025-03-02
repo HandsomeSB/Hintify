@@ -95,6 +95,28 @@
         text-align: center;
         min-height: 20px;
       }
+
+      /* Style for the select dropdown */
+      #characterSelector {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--vscode-widget-border);
+        background-color: var(--vscode-editor-background);
+        color: var(--vscode-foreground);
+        font-size: 13px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        display: block;
+      }
+
+      #characterSelector:focus {
+        outline: none;
+        border-color: var(--vscode-focusBorder);
+      }
     </style>
   </head>
   <body>
@@ -102,8 +124,9 @@
       <h2>Hintify</h2>
       <p>Voice-enabled coding assistant</p>
     </div>
-    <select id="characterSelector"></select>
+    
     <div class="chat-container">
+      <select id="characterSelector"></select>
       <div id="content"></div>
     </div>
 
@@ -210,10 +233,13 @@
           case 'populateCharacters':
                 const characterSelector = document.getElementById('characterSelector');
                 characterSelector.innerHTML = '';
-                message.characters.forEach(character => {
+                message.characters.forEach((character, index) => {
                     const option = document.createElement('option');
                     option.value = character;
                     option.text = character;
+                    if (index === 0) {
+                        option.selected = true;
+                    }
                     characterSelector.appendChild(option);
                 });
             break;
