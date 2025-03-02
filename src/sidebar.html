@@ -102,7 +102,7 @@
       <h2>Hintify</h2>
       <p>Voice-enabled coding assistant</p>
     </div>
-
+    <select id="characterSelector"></select>
     <div class="chat-container">
       <div id="content"></div>
     </div>
@@ -143,6 +143,10 @@
 
         isRecording = recording;
       }
+
+      document.getElementById('characterSelector').addEventListener('change', (event) => {
+            vscode.postMessage({ command: 'characterSelected', character: event.target.value });
+        });
 
       window.addEventListener("message", (event) => {
         const message = event.data;
@@ -202,6 +206,16 @@
             }
 
             typeWriter();
+            break;
+          case 'populateCharacters':
+                const characterSelector = document.getElementById('characterSelector');
+                characterSelector.innerHTML = '';
+                message.characters.forEach(character => {
+                    const option = document.createElement('option');
+                    option.value = character;
+                    option.text = character;
+                    characterSelector.appendChild(option);
+                });
             break;
         }
       });

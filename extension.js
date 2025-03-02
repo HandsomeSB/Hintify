@@ -11,6 +11,7 @@ const openaiService = require("./src/services/openaiService.js");
 const voiceRecording = require("./src/voiceRecording");
 const whisper = require("./src/wispher");
 const elevenlabs = require("./src/ttsTest/elevenlabs");
+const characterSelector = require("./src/ttsTest/characterSelector");
 
 dotenv.config({ path: path.join(__dirname, ".env") });
 
@@ -47,12 +48,13 @@ function activate(context) {
 			  const response = await openaiService.askAboutCode(
 				contentRetriever.getCurrentContent(), 
 				contentRetriever.getCurrentFileName(), 
-				transcript.text
+				transcript.text,
+				transcript.language
 			  );
 
 			  sidebarProvider.updateContent(response);
 
-			  elevenlabs.tts("dfZGXKiIzjizWtJ0NgPy", "eleven_flash_v2_5", response);
+			  elevenlabs.tts(characterSelector.getSelectedCharacterModelKey(), "eleven_multilingual_v2", response);
             } else {
               vscode.window.showErrorMessage("Failed to transcribe audio.");
               voiceRecording.deleteRecording(filePath); //delete wav file even if transciption fails.
@@ -104,14 +106,14 @@ function activate(context) {
         console.log(response);
         sidebarProvider.updateContent("Code hints generated!");
 
-			sidebarProvider.updateContent('Impersonating Mickey Mouse...');
-			const impersonateResponse = await openaiService.impersonate("Micky Mouse", response);
+			sidebarProvider.updateContent("Impersonating" + characterSelector.getSelectedCharacter() + "...");
+			const impersonateResponse = await openaiService.impersonate(characterSelector.getSelectedCharacter(), response);
 			sidebarProvider.updateContent(impersonateResponse);
 
 			// vscode.window.showInformationMessage('Impersonating...');
 			// tts.sendRequest(impersonateResponse);
 			// vscode.window.showInformationMessage('Playing audio...');
-			elevenlabs.tts("dfZGXKiIzjizWtJ0NgPy", "eleven_flash_v2_5", impersonateResponse); //eleven_multilingual_v2
+			elevenlabs.tts(characterSelector.getSelectedCharacterModelKey(), "eleven_multilingual_v2", impersonateResponse); //eleven_multilingual_v2
 		} else {
 			vscode.window.showErrorMessage('OpenAI not configured');
 		}

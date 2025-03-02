@@ -134,7 +134,7 @@ async function getCodeHints(code, fileName, fileExtension) {
  * @param {string} userQuery - User's question
  * @returns {Promise<string>} LLM response
  */
-async function askAboutCode(code, fileName, userQuery) {
+async function askAboutCode(code, fileName, userQuery, language) {
   if (!isConfigured()) {
     // Initialize if not already done
     initialize();
@@ -157,7 +157,7 @@ async function askAboutCode(code, fileName, userQuery) {
         {
           role: "system",
           content: `You are a code review assistant that identifies potential issues or bugs in code without fixing them. 
-          Your job isn't not to give direct solutions to coding problem but instead give explanations or hints to the user and direct them in the right path. Focus on providing clear, concise hints that help the developer understand what might be wrong. Do not give code snippets, instead, give simple logic or instructions relating to the question. Majorly be on a lookout for logical error and feel free to avoid small errors. Make sure to respond just about one issue as a response. Only include actual issues - if the code looks good, return an empty array.`,
+          Your job isn't not to give direct solutions to coding problem but instead give explanations or hints to the user and direct them in the right path. Focus on providing clear, concise hints that help the developer understand what might be wrong. Do not give code snippets, instead, give simple logic or instructions relating to the question. Majorly be on a lookout for logical error and feel free to avoid small errors. Make sure to respond just about one issue as a response. Only include actual issues - if the code looks good, return an empty array. Respond in the same language as the user. Be sure to make the response coloquial and easy to understand. Respond only in ${language}.`,
         },
         {
           role: "user",
