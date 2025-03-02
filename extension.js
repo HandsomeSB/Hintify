@@ -4,13 +4,13 @@ const vscode = require("vscode");
 const { SidebarProvider } = require("./src/sidebarProvider");
 const { VoiceRegister } = require("./src/voiceRegister");
 const contentRetriever = require("./src/contentRetrieval.js");
-const TTS = require("./src/tts.js");
 const dotenv = require("dotenv");
 const path = require("path");
 const openaiService = require('./src/services/openaiService.js');
 
 const voiceRecording = require("./src/voiceRecording");
 const whisper = require("./src/wispher");
+const elevenlabs = require("./src/ttsTest/elevenlabs");
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -47,7 +47,6 @@ function activate(context) {
 		);
 
 	openaiService.initialize();
-	const tts = new TTS(process.env.OPENAI_KEY);
 	// Start the file watcher
 	contentRetriever.startFileWatcher();
 	contentRetriever.addFileUpdateCallback(async (content, fileName, fileExtension) => {
@@ -67,6 +66,7 @@ function activate(context) {
 			// vscode.window.showInformationMessage('Impersonating...');
 			// tts.sendRequest(impersonateResponse);
 			// vscode.window.showInformationMessage('Playing audio...');
+			elevenlabs.tts("dfZGXKiIzjizWtJ0NgPy", "eleven_multilingual_v2", impersonateResponse);
 		} else {
 			vscode.window.showErrorMessage('OpenAI not configured');
 		}
