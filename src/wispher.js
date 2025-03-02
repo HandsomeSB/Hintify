@@ -17,9 +17,10 @@ async function transcribe(filePath) {
     const fileName = path.basename(filePath); // Get the actual file name
     formData.append("file", await fs.readFile(filePath), fileName); // Use the actual file name
     formData.append("model", "whisper-1");
+    formData.append("response_format", "verbose_json"); // Request verbose JSON response
 
     const response = await axios.post(
-      "https://api.openai.com/v1/audio/translations",
+      "https://api.openai.com/v1/audio/transcriptions",
       formData,
       {
         headers: {
@@ -29,7 +30,12 @@ async function transcribe(filePath) {
       }
     );
 
-    return response.data.text;
+    // console.log("language: ", response.data.language);
+
+    return {
+      text: response.data.text,
+      language: response.data.language,
+    };
   } catch (error) {
     console.error(
       "Whisper API error:",

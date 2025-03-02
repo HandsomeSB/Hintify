@@ -36,9 +36,10 @@ function activate(context) {
           .then((transcript) => {
             if (transcript) {
               // TODO: Send`transcript` variable to LLM for query
+              // transcript.language contains the detected language.
 
               vscode.window.showInformationMessage(
-                "Transcription: " + transcript
+                "Transcription: " + transcript.text
               );
               // Optionally delete the wav file here
               voiceRecording.deleteRecording(filePath);
