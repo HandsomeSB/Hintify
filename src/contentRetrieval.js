@@ -28,7 +28,7 @@ function startFileWatcher() {
                 onFileUpdate(); 
             }
         }
-    }, 1000); // 30 seconds
+    }, 60000); // 60 seconds
 }
 
 function stopFileWatcher() {
@@ -40,6 +40,14 @@ function stopFileWatcher() {
 
 function getCurrentContent() {
     return currentFileContent;
+}
+
+function getCurrentFileName() { 
+    return path.basename(currentFilePath);
+}
+
+function getCurrentFileExtension() {
+    return path.extname(currentFilePath);
 }
 
 function getLastUpdateTime() {
@@ -61,5 +69,7 @@ module.exports = {
     stopFileWatcher,
     getCurrentContent,
     getLastUpdateTime,
-    addFileUpdateCallback
+    addFileUpdateCallback,
+    getCurrentFileName,
+    getCurrentFileExtension
 };
