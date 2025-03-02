@@ -1,65 +1,42 @@
-# hintify README
+# Hintify: AI-Powered Code Assistance for VS Code
 
-This is the README for your extension "hintify". After writing up a brief description, we recommend including the following sections.
+&#x20;
 
-## Features
+## Overview 🚀
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Hintify is a lightweight yet powerful VS Code extension that provides AI-powered hints and real-time code suggestions to enhance developer productivity. With a fun twist, Hintify delivers intelligent insights right inside your editor, whether you're stuck on a tricky bug or need a better way to structure your code, you have Mickey Mouse to motivate you and be your thinking buddy.
 
-For example if there is an image subfolder under your extension project workspace:
+## Key Features 🔑
 
-\!\[feature X\]\(images/feature-x.png\)
+- **Smart Code Suggestions** – Get AI-driven code hints based on context and best practices.
+- **Error Explanation & Fixes** – Identify and resolve errors with clear explanations and suggested fixes.
+- **Code Optimization Insights** – Improve efficiency with performance-enhancing recommendations.
+- **Multi-Language Support** – Works with Python, JavaScript, Java, C++, and more.
+- **Lightweight & Non-Intrusive** – Minimal impact on editor performance.
+- **Realtime Availability** - Actively tracks editor changes and comes up with suggestions on the fly.
+- Voice Conversation Feature - You can talk and communicate with Mickey Mouse and other personalities in X languages in real-time.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Run Code & Installation 🛠️
 
-## Requirements
+1. git clone [https://github.com/HandsomeSB/Hintify](https://github.com/HandsomeSB/Hintify).
+2. Install Sox from [https://sourceforge.net/projects/sox/](https://sourceforge.net/projects/sox/).
+3. Install FFmpeg from [https://www.ffmpeg.org/](https://www.ffmpeg.org/).
+4. Set Up your API keys for Open AI and Eleven Labs in a .env file
+5. Run Extension.js and have a new sandboxed VS Code ready with Hintify
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## Usage ⚡
 
-## Extension Settings
+- Once installed, Hintify runs automatically in the background.
+- Use `Ctrl + Shift + P (Windows/Linux) or Cmd + Shift + P (Mac)` to bring up the Hintify panel.
+- Press the Push to talk Button and start conversing with Mickey Mouse, your personal coding Buddy
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## Contributing 🤝
 
-For example:
+Contributions are welcome! Feel free to fork the repository, submit issues, or create pull requests.
 
-This extension contributes the following settings:
+## Contact 📧
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+For support or suggestions, reach out via [GitHub Issues](https://github.com/your-repo/hintify/issues).
 
-## Known Issues
+Happy Coding! 🚀
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
