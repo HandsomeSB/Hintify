@@ -167,7 +167,7 @@ async function askAboutCode(code, fileName, userQuery) {
       max_tokens: 1000,
     });
 
-    return response.data.choices[0].message.content.trim();
+    return response.choices[0].message.content.trim();
   } catch (error) {
     console.error("OpenAI API error:", error);
     throw error;
