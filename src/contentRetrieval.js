@@ -42,6 +42,14 @@ function getCurrentContent() {
     return currentFileContent;
 }
 
+function getCurrentFileName() { 
+    return path.basename(currentFilePath);
+}
+
+function getCurrentFileExtension() {
+    return path.extname(currentFilePath);
+}
+
 function getLastUpdateTime() {
     return lastUpdateTime;
 }
@@ -61,5 +69,7 @@ module.exports = {
     stopFileWatcher,
     getCurrentContent,
     getLastUpdateTime,
-    addFileUpdateCallback
+    addFileUpdateCallback,
+    getCurrentFileName,
+    getCurrentFileExtension
 };

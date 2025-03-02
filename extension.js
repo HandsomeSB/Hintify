@@ -26,14 +26,14 @@ function activate(context) {
   const voiceRegister = VoiceRegister.INSTANCE;
 
   voiceRegister.addRecordingStartCallback(() => {
+	elevenlabs.stopAudio();
     const workspaceFolders = vscode.workspace.workspaceFolders;
     voiceRecording.startRecording(workspaceFolders).then((filePath) => {
       if (filePath) {
-        console.log("test");
         // Recording successful, send to Whisper
         whisper
           .transcribe(filePath)
-          .then((transcript) => {
+          .then(async (transcript) => {
             if (transcript) {
               // TODO: Send`transcript` variable to LLM for query
               // transcript.language contains the detected language.
@@ -43,6 +43,16 @@ function activate(context) {
               );
               // Optionally delete the wav file here
               voiceRecording.deleteRecording(filePath);
+
+			  const response = await openaiService.askAboutCode(
+				contentRetriever.getCurrentContent(), 
+				contentRetriever.getCurrentFileName(), 
+				transcript.text
+			  );
+
+			  sidebarProvider.updateContent(response);
+
+			  elevenlabs.tts("dfZGXKiIzjizWtJ0NgPy", "eleven_flash_v2_5", response);
             } else {
               vscode.window.showErrorMessage("Failed to transcribe audio.");
               voiceRecording.deleteRecording(filePath); //delete wav file even if transciption fails.
@@ -76,12 +86,12 @@ function activate(context) {
   );
 
   openaiService.initialize();
-  const tts = new TTS(process.env.OPENAI_KEY);
 
   // Start the file watcher
   contentRetriever.startFileWatcher();
   contentRetriever.addFileUpdateCallback(
     async (content, fileName, fileExtension) => {
+		return;
       console.log("File content updated at:", fileName, fileExtension);
       console.log(content);
 
