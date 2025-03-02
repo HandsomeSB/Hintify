@@ -5,6 +5,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
+//transcribe function needs a file path that it needs to transcribe.
 async function transcribe(filePath) {
   try {
     const apiKey = process.env.OPENAI_KEY; // Get API key from .env

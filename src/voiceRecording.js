@@ -8,12 +8,14 @@ let recordingProcess = null;
 
 async function startRecording(workspaceFolders) {
   return new Promise((resolve, reject) => {
+    // Checking if the recording is already in progress.
     if (recordingProcess) {
       vscode.window.showInformationMessage("Recording is already in progress.");
-      resolve(null); // Return null to indicate failure
+      resolve(null);
       return;
     }
 
+    // Checking if you have a project open.
     if (!workspaceFolders || workspaceFolders.length === 0) {
       vscode.window.showErrorMessage(
         "No workspace folder open to save the recording."
@@ -22,6 +24,7 @@ async function startRecording(workspaceFolders) {
       return;
     }
 
+    //Naming convention for the file.
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const outputFile = path.join(
       workspaceFolders[0].uri.fsPath,
@@ -36,16 +39,10 @@ async function startRecording(workspaceFolders) {
       command = `ffmpeg -f dshow -i audio="Microphone" -y "${outputFile}"`;
     } else if (platform === "darwin" || platform === "linux") {
       command = `${soxPath} -d "${outputFile}"`;
-      //   if (!fs.existsSync(soxPath)) {
-      //     vscode.window.showErrorMessage(
-      //       'sox not found at /opt/homebrew/bin/sox. Please install it using "brew install sox".'
-      //     );
-      //     resolve(null); // Return null to indicate failure
-      //     return;
-      //   }
     } else {
       vscode.window.showErrorMessage("Unsupported platform for recording.");
-      resolve(null); // Return null to indicate failure
+      // Return null to indicate failure
+      resolve(null);
       return;
     }
 
@@ -53,7 +50,8 @@ async function startRecording(workspaceFolders) {
       recordingProcess = cp.exec(command, (error) => {
         if (error && error.signal !== "SIGINT") {
           vscode.window.showErrorMessage(`Recording failed: ${error.message}`);
-          resolve(null); // Return null to indicate failure
+          // Return null to indicate failure
+          resolve(null);
           return;
         }
         resolve(outputFile); // Resolve with the file path when recording is done.
@@ -76,6 +74,7 @@ async function startRecording(workspaceFolders) {
   });
 }
 
+// Stop Recording Function
 function stopRecording(workspaceFolders) {
   if (!recordingProcess) {
     vscode.window.showErrorMessage("No active recording to stop.");
