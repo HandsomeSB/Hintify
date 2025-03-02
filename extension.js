@@ -4,13 +4,13 @@ const vscode = require("vscode");
 const { SidebarProvider } = require("./src/sidebarProvider");
 const { VoiceRegister } = require("./src/voiceRegister");
 const contentRetriever = require("./src/contentRetrieval.js");
-const TTS = require("./src/tts.js");
 const dotenv = require("dotenv");
 const path = require("path");
 const openaiService = require("./src/services/openaiService.js");
 
 const voiceRecording = require("./src/voiceRecording");
 const whisper = require("./src/wispher");
+const elevenlabs = require("./src/ttsTest/elevenlabs");
 
 dotenv.config({ path: path.join(__dirname, ".env") });
 
@@ -95,21 +95,18 @@ function activate(context) {
         console.log(response);
         sidebarProvider.updateContent("Code hints generated!");
 
-        sidebarProvider.updateContent("Impersonating Gordon Ramsay...");
-        const impersonateResponse = await openaiService.impersonate(
-          "Gordon Ramsay",
-          response
-        );
-        sidebarProvider.updateContent(impersonateResponse);
+			sidebarProvider.updateContent('Impersonating Mickey Mouse...');
+			const impersonateResponse = await openaiService.impersonate("Micky Mouse", response);
+			sidebarProvider.updateContent(impersonateResponse);
 
-        // vscode.window.showInformationMessage('Impersonating...');
-        // tts.sendRequest(impersonateResponse);
-        // vscode.window.showInformationMessage('Playing audio...');
-      } else {
-        vscode.window.showErrorMessage("OpenAI not configured");
-      }
-    }
-  );
+			// vscode.window.showInformationMessage('Impersonating...');
+			// tts.sendRequest(impersonateResponse);
+			// vscode.window.showInformationMessage('Playing audio...');
+			elevenlabs.tts("dfZGXKiIzjizWtJ0NgPy", "eleven_flash_v2_5", impersonateResponse); //eleven_multilingual_v2
+		} else {
+			vscode.window.showErrorMessage('OpenAI not configured');
+		}
+	});
 
   // Register a disposable to clean up the interval when the extension is deactivated
   context.subscriptions.push({
