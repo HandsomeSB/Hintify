@@ -91,7 +91,6 @@ function activate(context) {
   contentRetriever.startFileWatcher();
   contentRetriever.addFileUpdateCallback(
     async (content, fileName, fileExtension) => {
-		return;
       console.log("File content updated at:", fileName, fileExtension);
       console.log(content);
 

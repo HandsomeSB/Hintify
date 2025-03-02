@@ -28,7 +28,7 @@ function startFileWatcher() {
                 onFileUpdate(); 
             }
         }
-    }, 1000); // 30 seconds
+    }, 60000); // 60 seconds
 }
 
 function stopFileWatcher() {

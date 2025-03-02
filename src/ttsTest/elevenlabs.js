@@ -46,6 +46,7 @@ async function tts(voiceId, modelId, text) {
 }
 
 function playAudio(filePath) {
+  stopAudio(); // Stop any currently playing audio
   const command = process.platform === 'win32' ? `start ${filePath}` : `afplay ${filePath}`;  
   audioProcess = exec(command, (error) => {
     if (error) {
