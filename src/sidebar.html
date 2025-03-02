@@ -13,6 +13,26 @@
         margin-bottom: 20px;
       }
 
+      .chat-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+        display: flex;
+        flex-direction: column-reverse;
+      }
+
+      #content {
+        position: relative;
+        background-color: var(--vscode-editor-background);
+        border: 1px solid var(--vscode-widget-border);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 8px;
+        font-size: 13px;
+        line-height: 1.6;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
       .record-button {
         display: flex;
         align-items: center;
@@ -83,7 +103,9 @@
       <p>Voice-enabled coding assistant</p>
     </div>
 
-    <div id="content"></div>
+    <div class="chat-container">
+      <div id="content"></div>
+    </div>
 
     <button
       id="recordToggle"
@@ -131,7 +153,55 @@
             break;
           case "updateContent":
             // Display the return value
-            document.getElementById("content").innerHTML = message.data;
+            const text = message.data;
+            const contentElement = document.getElementById("content");
+            contentElement.innerHTML = "";
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = text;
+            const textNodes = [];
+            let currentTexts = [];
+
+            function getAllTextNodes(node) {
+              if (node.nodeType === 3) {
+                // Text node
+                if (node.nodeValue.trim() !== "") {
+                  textNodes.push(node);
+                  currentTexts.push(node.nodeValue);
+                }
+              } else {
+                for (let child of node.childNodes) {
+                  getAllTextNodes(child);
+                }
+              }
+            }
+
+            getAllTextNodes(tempDiv);
+            contentElement.appendChild(tempDiv);
+
+            // Clear all text nodes
+            textNodes.forEach((node, index) => {
+              node.nodeValue = "";
+            });
+
+            let nodeIndex = 0;
+            let charIndex = 0;
+
+            function typeWriter() {
+              if (nodeIndex < textNodes.length) {
+                if (charIndex < currentTexts[nodeIndex].length) {
+                  textNodes[nodeIndex].nodeValue +=
+                    currentTexts[nodeIndex][charIndex];
+                  charIndex++;
+                  setTimeout(typeWriter, 50);
+                } else {
+                  nodeIndex++;
+                  charIndex = 0;
+                  setTimeout(typeWriter, 50);
+                }
+              }
+            }
+
+            typeWriter();
             break;
         }
       });
