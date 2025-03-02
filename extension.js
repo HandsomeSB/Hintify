@@ -59,8 +59,8 @@ function activate(context) {
 			console.log(response);
 			sidebarProvider.updateContent('Code hints generated!');
 
-			sidebarProvider.updateContent('Impersonating Gordon Ramsay...');
-			const impersonateResponse = await openaiService.impersonate("Gordon Ramsay", response);
+			sidebarProvider.updateContent('Impersonating Mickey Mouse...');
+			const impersonateResponse = await openaiService.impersonate("Micky Mouse", response);
 			sidebarProvider.updateContent(impersonateResponse);
 
 			// vscode.window.showInformationMessage('Impersonating...');
