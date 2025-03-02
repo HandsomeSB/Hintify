@@ -55,12 +55,12 @@ function activate(context) {
 		console.log(content);
 
 		if (openaiService.isConfigured()) {
-			sidebarProvider.updateContent('Generating code hints...');
+			//sidebarProvider.updateContent('Generating code hints...');
 			const response = await openaiService.getCodeHints(content, fileName, fileExtension);
 			console.log(response);
-			sidebarProvider.updateContent('Code hints generated!');
+			//sidebarProvider.updateContent('Code hints generated!');
 
-			sidebarProvider.updateContent('Impersonating Gordon Ramsay...');
+			//sidebarProvider.updateContent('Impersonating Gordon Ramsay...');
 			const impersonateResponse = await openaiService.impersonate("Gordon Ramsay", response);
 			sidebarProvider.updateContent(impersonateResponse);
 
