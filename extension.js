@@ -66,7 +66,7 @@ function activate(context) {
 			// vscode.window.showInformationMessage('Impersonating...');
 			// tts.sendRequest(impersonateResponse);
 			// vscode.window.showInformationMessage('Playing audio...');
-			elevenlabs.tts("dfZGXKiIzjizWtJ0NgPy", "eleven_multilingual_v2", impersonateResponse);
+			elevenlabs.tts("dfZGXKiIzjizWtJ0NgPy", "eleven_flash_v2_5", impersonateResponse); //eleven_multilingual_v2
 		} else {
 			vscode.window.showErrorMessage('OpenAI not configured');
 		}
