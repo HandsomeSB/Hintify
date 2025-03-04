@@ -16,14 +16,6 @@
       {
         "command": "hintify.toggleTalk",
         "title": "Hintify: toggleTalk"
-      },
-      {
-        "command": "hintify.startRecording",
-        "title": "Start Recording"
-      },
-      {
-        "command": "hintify.stopRecording",
-        "title": "Stop Recording"
       }
     ],
     "keybindings": [
@@ -107,7 +99,6 @@
     "dotenv": "^16.4.7",
     "elevenlabs": "^1.52.0",
     "eslint": "^9.19.0",
-    "fakeyou.js": "^1.1.1",
     "openai": "^4.86.1",
     "vscode": "^1.1.37"
   }
